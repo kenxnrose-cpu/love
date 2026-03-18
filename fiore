@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sweet Long-Distance Love</title>
+  <style>
+    :root{
+      --pink:#f8a3c6;
+      --hotpink:#ff4da6;
+      --bg:#fff0f6;
+      --text:#333;
+      --card:#ffffff;
+      --shadow:0 6px 20px rgba(0,0,0,.12);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);font-family:Arial, Helvetica, sans-serif;color:var(--text);}
+
+    header{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:14px 20px;background:linear-gradient(135deg,#ffd6ea,#ffc0e0);
+      border-bottom:2px solid #f3a7c9;
+    }
+    header h1{font-size:22px;margin:0;color:#6a2c5f;}
+    .container{max-width:1100px;margin:0 auto;padding:20px;}
+
+    /* Gallery grid */
+    .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px;margin-top:10px;}
+    .card{
+      background:var(--card);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);
+      transition:transform .2s ease;
+      position:relative;
+    }
+    .card:hover{transform:translateY(-4px);}
+    .card img{width:100%;height:180px;object-fit:cover;display:block;cursor:pointer}
+    .card .caption{padding:10px;font-size:13px; color:#555}
+    /* Interactive art (tilt on hover) */
+    .tilt{transition: transform .2s ease; transform-style: preserve-3d}
+    .tilt:hover{transform: rotateX(6deg) rotateY(-6deg) scale(1.02);}
+
+    /* Hearts bar */
+    .hearts{display:flex;gap:6px;align-items:center;margin:14px 0}
+    .heart{font-size:26px; cursor:pointer; transition:transform .2s; }
+    .heart.active{ transform: scale(1.25); color:#e2557b; }
+    
+    /* Notes section */
+    .notes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+    .note{background:#fff;border-radius:12px;padding:14px;border:1px solid #f0d4ea;min-height:110px;}
+    textarea{width:100%;height:110px;border:1px solid #e6d0e1;border-radius:8px;padding:8px;font-family:inherit;font-size:14px;background:#fff}
+    .btn{border:none;background:var(--hotpink);color:white;padding:10px 14px;border-radius:8px;cursor:pointer}
+    .btn.secondary{background:#ddd;color:#333;border:1px solid #ccc}
+
+    /* Retro modal (Windows-like) */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.25);display:none;align-items:center;justify-content:center}
+    .modal{width:320px;background:#fff;border:3px solid #d88bd7;border-radius:6px;box-shadow:0 10px 25px rgba(0,0,0,.25);overflow:hidden}
+    .modal header{background:#ff4da6;color:white;padding:8px 12px;font-weight:bold}
+    .modal .content{padding:14px;font-family:monospace;font-size:14px; text-align:center}
+    .modal .actions{display:flex;justify-content:space-between;padding:8px 12px 14px}
+    .kbd{font-family:monospace;background:#f1f1f1;border:1px solid #ddd;padding:4px 6px;border-radius:4px}
+    @media (max-width: 800px){
+      .notes{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Sweet Long-Distance Notes</h1>
+    <div style="font-size:12px; color:#7a1f4a;">From a teenage heart, with all the love</div>
+  </header>
+
+  <main class="container">
+
+    <!-- Photo Gallery with interactive items -->
+    <section aria-label="Photo Gallery" class="gallery" id="gallery">
+      <!-- Example cards; replace src with your images -->
+      <div class="card tilt" data-full="image1.jpg">
+        <img src="image1.jpg" alt="Photo 1" />
+        <div class="caption">Photo 1</div>
+      </div>
+      <div class="card tilt" data-full="image2.jpg">
+        <img src="image2.jpg" alt="Photo 2" />
+        <div class="caption">Photo 2</div>
+      </div>
+      <div class="card tilt" data-full="image3.jpg">
+        <img src="image3.jpg" alt="Photo 3" />
+        <div class="caption">Photo 3</div>
+      </div>
+      <div class="card tilt" data-full="image4.jpg">
+        <img src="image4.jpg" alt="Photo 4" />
+        <div class="caption">Photo 4</div>
+      </div>
+    </section>
+
+    <!-- Interactive hearts -->
+    <section aria-label="Interactive Hearts" class="hearts" id="heartsRow">
+      <span class="heart" title="Love">❤️</span>
+      <span class="heart" title="Love">💗</span>
+      <span class="heart" title="Love">💖</span>
+      <span class="heart" title="Love">💞</span>
+      <span class="heart" title="Love">💘</span>
+      <span style="margin-left:8px;color:#555;font-size:14px;">Tap hearts to react</span>
+    </section>
+
+    <!-- Sweet notes -->
+    <section class="notes" aria-label="Sweet notes and customization">
+      <div class="note" id="noteDraft">
+        <strong>Notes to my love</strong>
+        <p style="margin-top:8px; line-height:1.4;" id="notePreview">
+          You are my sunshine across the miles. I love you more than yesterday, but less than tomorrow. Always yours.
+        </p>
+      </div>
+      <div class="note">
+        <strong>Customize your message</strong>
+        <p style="font-size:12px; color:#666; margin:6px 0 8px;">
+          Edit the text below to keep your message fresh and true.
+        </p>
+        <textarea id="customNote" placeholder="Write your sweet note here..."></textarea>
+        <button class="btn" id="saveNote" style="margin-top:8px;">Save Note</button>
+        <button class="btn secondary" id="resetNote" style="margin-top:8px;">Reset</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Retro Windows-style modal (hidden by default) -->
+  <div class="modal-backdrop" id="toast">
+    <div class="modal" role="dialog" aria-label="Notice">
+      <header>I love you</header>
+      <div class="content">
+        <p>I love you. <span style="font-family:monospace;">(≧◡≦)ﾉ♡</span></p>
+        <p>Always, from me to you</p>
+      </div>
+      <div class="actions" style="justify-content:center;">
+        <button class="btn" id="okBtn" style="min-width:60px;">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Lightbox-ish modal for images (simple)
+    const cards = document.querySelectorAll('.card');
+    const modalBackdrop = document.getElementById('toast');
+    const okBtn = document.getElementById('okBtn');
+    let lastOpen = null;
+
+    cards.forEach(card => {
+      const img = card.querySelector('img');
+      card.addEventListener('click', () => {
+        // Open a new window with the image or show a bigger view
+        const src = card.getAttribute('data-full') || img.src;
+        const w = window.open('', '_blank');
+        w.document.write(`<title>Photo</title><img src="${src}" style="width:100%;height:auto;object-fit:cover;display:block"/>`);
+      });
+    });
+
+    // Hearts interaction
+    const hearts = document.querySelectorAll('.heart');
+    hearts.forEach(h => {
+      h.addEventListener('click', () => {
+        h.classList.toggle('active');
+      });
+    });
+
+    // Notes editing
+    const notePreview = document.getElementById('notePreview');
+    const customNote = document.getElementById('customNote');
+    const saveNote = document.getElementById('saveNote');
+    const resetNote = document.getElementById('resetNote');
+    const defaultNote = "You are my sunshine across the miles. I love you more than yesterday, but less than tomorrow. Always yours.";
+
+    // Initialize
+    customNote.value = "";
+
+    saveNote.addEventListener('click', () => {
+      const text = customNote.value.trim();
+      if (text.length > 0) {
+        notePreview.textContent = text;
+        localStorage.setItem('myNote', text);
+      } else {
+        notePreview.textContent = defaultNote;
+      }
+      // Simple feedback via the retro modal
+      showModal();
+    });
+
+    resetNote.addEventListener('click', () => {
+      customNote.value = "";
+      notePreview.textContent = defaultNote;
+      localStorage.removeItem('myNote');
+    });
+
+    function showModal() {
+      modalBackdrop.style.display = 'flex';
+      setTimeout(() => {
+        modalBackdrop.style.display = 'none';
+      }, 1800);
+    }
+
+    // Restore saved note on load
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('myNote');
+      if (saved) {
+        notePreview.textContent = saved;
+        customNote.value = saved;
+      } else {
+        notePreview.textContent = defaultNote;
+      }
+    });
+
+    // Simple keyboard shortcut to trigger the retro box
+    document.addEventListener('keydown', (e) => {
+      if (e.key.toLowerCase() === 'l' && (e.metaKey || e.ctrlKey)) {
+        showModal();
+      }
+    });
+
+    // Keyboard handler for the modal OK button
+    okBtn.addEventListener('click', () => {
+      modalBackdrop.style.display = 'none';
+    });
+
+  </script>
+</body>
+</html>
